@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { useEffect, useState } from 'react'
 
 export default function App() {
   return <Game />
@@ -12,12 +13,21 @@ bo$2bo$3o!
 `
 
 function Game() {
-  const glider = Grid.fromRle(gliderRle)
-  if (!glider) return <div>error on rle</div>
+  const cells = new Grid(100, 100)
+  const [grid, setGrid] = useState(cells)
 
-  const cells = new Grid(50, 15)
-  cells.copyFrom(glider, 0, 0)
-  return <GridViewer grid={cells} />
+  useEffect(() => {
+    const glider = Grid.fromRle(gliderRle)
+    if (glider) setGrid(g => g.copyFrom(glider, 0, 0))
+  }, [])
+
+  useEffect(() => {
+    setInterval(() => {
+      setGrid(g => g.tick())
+    }, 1)
+  }, [])
+
+  return <GridViewer grid={grid} />
 }
 
 interface IGridViewerProps {
@@ -56,18 +66,48 @@ class Grid {
     return this.cells[pos(this.width, i, j)]
   }
 
+  getSafe(i: number, j: number) {
+    return this.get(i, j) || false
+  }
+
   set(i: number, j: number, value: boolean) {
     this.cells[pos(this.width, i, j)] = value
   }
 
+  tick() {
+    const copy = new Grid(this.width, this.length)
+    copy.cells = this.cells.slice()
+    for (let j = 0; j < this.length; ++j) {
+      for (let i = 0; i < this.width; ++i) {
+        const neighbors =
+          Number(this.getSafe(i - 1, j - 1)) +
+          Number(this.getSafe(i + 0, j - 1)) +
+          Number(this.getSafe(i + 1, j - 1)) +
+          Number(this.getSafe(i - 1, j + 0)) +
+          Number(this.getSafe(i + 1, j + 0)) +
+          Number(this.getSafe(i - 1, j + 1)) +
+          Number(this.getSafe(i + 0, j + 1)) +
+          Number(this.getSafe(i + 1, j + 1)) +
+          0
+
+        if (neighbors < 2 || neighbors > 3) copy.set(i, j, false)
+        else if (neighbors === 3) copy.set(i, j, true)
+      }
+    }
+    return copy
+  }
+
   copyFrom(other: Grid, x: number, y: number) {
+    const copy = new Grid(this.width, this.length)
+    copy.cells = this.cells.slice()
     for (let j = 0; j < other.length; ++j) {
       if (j + y >= this.length) break
       for (let i = 0; i < other.width; ++i) {
         if (i + x >= this.width) break
-        this.set(i + x, j + y, other.get(i, j))
+        copy.set(i + x, j + y, other.get(i, j))
       }
     }
+    return copy
   }
 
   static fromRle(rle: string): Grid | null {
