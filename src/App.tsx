@@ -103,7 +103,7 @@ function GridViewer(props: IGridViewerProps) {
   }
 
   return (
-    <pre style={{ fontFamily: 'Cousine', fontSize: '5px', lineHeight: '0.75em' }} key="key">
+    <pre style={{ fontFamily: 'Cousine', fontSize: '5px', lineHeight: '0.75em' }}>
       <Fragment key={new Date().getTime()}>{stringGrid}</Fragment>
     </pre>
   )
@@ -112,19 +112,16 @@ function GridViewer(props: IGridViewerProps) {
 class Grid {
   width: number
   length: number
-  cells: Uint32Array
+  cells: Uint8Array
 
   constructor(x: number, y: number) {
     this.width = x
     this.length = y
-    this.cells = new Uint32Array(Math.ceil((x * y) / 32)).fill(0)
+    this.cells = new Uint8Array(x * y).fill(0)
   }
 
   get(i: number, j: number) {
-    const bit = j * this.width + i
-    const box = bit >> 5 // Math.floor(bit / 32)
-    const pos = bit & 31 // bit % 32
-    return (this.cells[box] & (1 << pos)) >>> pos
+    return this.cells[pos(this.width, i, j)]
   }
 
   getSafe(i: number, j: number) {
@@ -133,10 +130,7 @@ class Grid {
   }
 
   set(i: number, j: number, value: number) {
-    const bit = j * this.width + i
-    const box = bit >> 5 // Math.floor(bit / 32)
-    const pos = bit & 31 // bit % 32
-    this.cells[box] = (this.cells[box] & ~(1 << pos)) | (value << pos)
+    this.cells[pos(this.width, i, j)] = value
   }
 
   tick() {
@@ -173,6 +167,12 @@ class Grid {
           }
         }
         const y = hash5?.[x] || 0
+        // console.log({ x, y })
+        // if (y !== 0) {
+        //   console.log({ i, j })
+        //   console.log(pretty(x))
+        //   console.log(pretty(y))
+        // }
         for (let di = 1; di < hashSize - 1; ++di) {
           for (let dj = 1; dj < hashSize - 1; ++dj) {
             const offset = dj * hashSize + di
@@ -206,7 +206,7 @@ class Grid {
     if (!headerMatch) return null
     const [, x, y] = headerMatch.map(Number)
 
-    const grid = new Grid(x, y)
+    const result = new Uint8Array(x * y).fill(0)
     let i = 0
     let j = 0
     const strBody = body.join('').replace('!', '')
@@ -219,10 +219,16 @@ class Grid {
         i = 0
       } else {
         const state = tag === 'o' ? 1 : 0
-        while (count-- > 0) grid.set(i++, j, state)
+        while (count-- > 0) result[pos(x, i++, j)] = state
       }
     }
 
+    const grid = new Grid(x, y)
+    grid.cells = result
     return grid
   }
+}
+
+function pos(width: number, i: number, j: number) {
+  return width * j + i
 }
