@@ -5,19 +5,43 @@ export default function App() {
 }
 
 const gliderRle = `
-x = 24, y = 47, rule = B3/S23
-10bo$9b2o3bo$8b2ob3obo$10bo2b3o$10bob3o$13b2o$12b2o$12bo$10bo$10bo3bo$
-8b4o3bo$7bo4b2o2bo$7b2obo5bo$10b2o2b3o$10b2o$7b2o2b5o$5b2ob4o3bob2o$6b
-4obo3b4o$10b2o5b3o$10bo4bo$10bo$10b2obobo$10b2o$10b2o3bo$11bo$4bo14bo$
-3b2ob2o8b2ob2o$4bo3bo6bo3bo$3bo2bob8obo2bo$3bob2o3bo2bo3b2obo$6bobo6bo
-bo$3bo3b2o6b2o3bo$2bo18bo$b3o5bo4bo5b3o$bobobo3bo4bo3bobobo$b2o5bo6bo
-5b2o$obo18bobo$3bo16bo$3bo16bo$3bo16bo$bo2bo14bo2bo$2b3o14b3o$4bo14bo
-2$4b2o12b2o2$4b3o10b3o!
+#N Gosper glider gun
+#C This was the first gun discovered.
+#C As its name suggests, it was discovered by Bill Gosper.
+x = 36, y = 9, rule = B3/S23
+24bo$22bobo$12b2o6b2o12b2o$11bo3bo4b2o12b2o$2o8bo5bo3b2o$2o8bo3bob2o4b
+obo$10bo5bo7bo$11bo3bo$12b2o!
 `
+
+const hashSize = 5
+
+function get(g: number, i: number, j: number) {
+  if (i < 0 || i >= hashSize || j < 0 || j >= hashSize) return 0
+  const offset = j * hashSize + i
+  return (g & (1 << offset)) >>> offset
+}
+
+function pretty(g: number) {
+  let result = ''
+  for (let j = 0; j < hashSize; ++j) {
+    result += get(g, 0, j)
+    result += get(g, 1, j)
+    result += get(g, 2, j)
+    result += get(g, 3, j)
+    result += get(g, 4, j)
+    result += '\n'
+  }
+  return result
+}
+
+let hash5: Uint32Array | null = null
 
 function Game() {
   const cells = new Grid(400, 400)
   const [grid, setGrid] = useState(cells)
+  const [loaded, setLoaded] = useState<boolean>(false)
+  const [fps, setFps] = useState(1)
+  const [, setFramesCount] = useState(0)
 
   useEffect(() => {
     const glider = Grid.fromRle(gliderRle)
@@ -25,18 +49,41 @@ function Game() {
   }, [])
 
   useEffect(() => {
-    setInterval(() => {
-      setGrid(g => {
-        // let time = new Date().getTime()
-        const newG = g.tick()
-        // time = new Date().getTime() - time
-        // console.log({ time })
-        return newG
+    fetch('hash5.buff')
+      .then(res => res.arrayBuffer())
+      .then(buff => {
+        hash5 = new Uint32Array(buff)
+        setLoaded(true)
       })
-    }, 20)
   }, [])
 
-  return <GridViewer grid={grid} />
+  useEffect(() => {
+    if (!loaded) return
+    setInterval(() => {
+      setGrid(g => {
+        const newG = g.tick2()
+        setFramesCount(c => c + 1)
+        return newG
+      })
+    }, 0)
+  }, [loaded])
+
+  useEffect(() => {
+    setInterval(() => {
+      setFramesCount(c => {
+        setFps(c)
+        return 0
+      })
+    }, 1000)
+  }, [])
+
+  return (
+    <>
+      FPS={fps}
+      <br />
+      <GridViewer grid={grid} />
+    </>
+  )
 }
 
 interface IGridViewerProps {
@@ -91,19 +138,48 @@ class Grid {
     copy.cells = this.cells.slice()
     for (let j = 0; j < this.length; ++j) {
       for (let i = 0; i < this.width; ++i) {
-        const neighbors =
-          this.getSafe(i - 1, j - 1) +
-          this.getSafe(i + 0, j - 1) +
-          this.getSafe(i + 1, j - 1) +
-          this.getSafe(i - 1, j + 0) +
-          this.getSafe(i + 1, j + 0) +
-          this.getSafe(i - 1, j + 1) +
-          this.getSafe(i + 0, j + 1) +
-          this.getSafe(i + 1, j + 1) +
-          0
+        const a0 = this.getSafe(i - 1, j - 1)
+        const a1 = this.getSafe(i + 0, j - 1)
+        const a2 = this.getSafe(i + 1, j - 1)
+        const a3 = this.getSafe(i - 1, j + 0)
+        const a4 = this.getSafe(i + 0, j + 0)
+        const a5 = this.getSafe(i + 1, j + 0)
+        const a6 = this.getSafe(i - 1, j + 1)
+        const a7 = this.getSafe(i + 0, j + 1)
+        const a8 = this.getSafe(i + 1, j + 1)
+        const neighbors = a0 + a1 + a2 + a3 + a5 + a6 + a7 + a8
+        if (a4 === 1 && (neighbors < 2 || neighbors > 3)) copy.set(i, j, 0)
+        else if (a4 === 0 && neighbors === 3) copy.set(i, j, 1)
+      }
+    }
+    return copy
+  }
 
-        if (neighbors < 2 || neighbors > 3) copy.set(i, j, 0)
-        else if (neighbors === 3) copy.set(i, j, 1)
+  tick2() {
+    const copy = new Grid(this.width, this.length)
+    copy.cells = this.cells.slice()
+    for (let j = -1; j < this.length; j += hashSize - 2) {
+      for (let i = -1; i < this.width; i += hashSize - 2) {
+        let x = 0
+        for (let di = 0; di < hashSize; ++di) {
+          for (let dj = 0; dj < hashSize; ++dj) {
+            x |= this.getSafe(i + di, j + dj) << (dj * hashSize + di)
+          }
+        }
+        const y = hash5?.[x] || 0
+        // console.log({ x, y })
+        // if (y !== 0) {
+        //   console.log({ i, j })
+        //   console.log(pretty(x))
+        //   console.log(pretty(y))
+        // }
+        for (let di = 1; di < hashSize - 1; ++di) {
+          for (let dj = 1; dj < hashSize - 1; ++dj) {
+            const offset = dj * hashSize + di
+            const value = (y & (1 << offset)) >>> offset
+            copy.set(i + di, j + dj, value)
+          }
+        }
       }
     }
     return copy
