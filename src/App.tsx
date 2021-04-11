@@ -6,19 +6,18 @@ export default function App() {
 }
 
 const gliderRle = `
-#C This is a glider.
-#C another comment
-x = 3, y = 3
-bo$2bo$3o!
+# You can save the pattern into this box with Settings/Pattern/Save or Ctrl-S.
+x = 7, y = 3, rule = B3/S23
+o3b3o$3o2bo$bo!
 `
 
 function Game() {
-  const cells = new Grid(150, 40)
+  const cells = new Grid(400, 400)
   const [grid, setGrid] = useState(cells)
 
   useEffect(() => {
     const glider = Grid.fromRle(gliderRle)
-    if (glider) setGrid(g => g.copyFrom(glider, 0, 0))
+    if (glider) setGrid(g => g.copyFrom(glider, 200, 200))
   }, [])
 
   useEffect(() => {
@@ -42,19 +41,21 @@ interface IGridViewerProps {
 function GridViewer(props: IGridViewerProps) {
   const grid = props.grid
   return (
-    <pre>{_.times(grid.length, j => _.times(grid.width, i => (grid.get(i, j) ? 'o' : ' ')).join('')).join('\n')}</pre>
+    <pre style={{ fontFamily: 'Cousine', fontSize: '5px', lineHeight: '0.75em' }}>
+      {_.times(grid.length, j => _.times(grid.width, i => (grid.get(i, j) ? '0' : ' ')).join('')).join('\n')}
+    </pre>
   )
 }
 
 class Grid {
   width: number
   length: number
-  cells: boolean[]
+  cells: number[]
 
   constructor(x: number, y: number) {
     this.width = x
     this.length = y
-    this.cells = Array(x * y).fill(false)
+    this.cells = Array(x * y).fill(0)
   }
 
   get(i: number, j: number) {
@@ -62,10 +63,10 @@ class Grid {
   }
 
   getSafe(i: number, j: number) {
-    return this.get(i, j) || false
+    return this.get(i, j) || 0
   }
 
-  set(i: number, j: number, value: boolean) {
+  set(i: number, j: number, value: number) {
     this.cells[pos(this.width, i, j)] = value
   }
 
@@ -75,18 +76,18 @@ class Grid {
     for (let j = 0; j < this.length; ++j) {
       for (let i = 0; i < this.width; ++i) {
         const neighbors =
-          Number(this.getSafe(i - 1, j - 1)) +
-          Number(this.getSafe(i + 0, j - 1)) +
-          Number(this.getSafe(i + 1, j - 1)) +
-          Number(this.getSafe(i - 1, j + 0)) +
-          Number(this.getSafe(i + 1, j + 0)) +
-          Number(this.getSafe(i - 1, j + 1)) +
-          Number(this.getSafe(i + 0, j + 1)) +
-          Number(this.getSafe(i + 1, j + 1)) +
+          this.getSafe(i - 1, j - 1) +
+          this.getSafe(i + 0, j - 1) +
+          this.getSafe(i + 1, j - 1) +
+          this.getSafe(i - 1, j + 0) +
+          this.getSafe(i + 1, j + 0) +
+          this.getSafe(i - 1, j + 1) +
+          this.getSafe(i + 0, j + 1) +
+          this.getSafe(i + 1, j + 1) +
           0
 
-        if (neighbors < 2 || neighbors > 3) copy.set(i, j, false)
-        else if (neighbors === 3) copy.set(i, j, true)
+        if (neighbors < 2 || neighbors > 3) copy.set(i, j, 0)
+        else if (neighbors === 3) copy.set(i, j, 1)
       }
     }
     return copy
@@ -113,7 +114,7 @@ class Grid {
     if (!headerMatch) return null
     const [, x, y] = headerMatch.map(Number)
 
-    const result = Array(x * y).fill(false)
+    const result = Array(x * y).fill(0)
     body
       .join()
       .replace('!', '')
