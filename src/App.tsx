@@ -69,6 +69,7 @@ class Grid {
   }
 
   getSafe(i: number, j: number) {
+    if (i < 0 || i >= this.width || j < 0 || j >= this.length) return 0
     return this.get(i, j) || 0
   }
 
