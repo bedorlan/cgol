@@ -1,13 +1,18 @@
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 export default function App() {
   return <Game />
 }
 
 const gliderRle = `
-# You can save the pattern into this box with Settings/Pattern/Save or Ctrl-S.
-x = 7, y = 3, rule = B3/S23
-o3b3o$3o2bo$bo!
+x = 24, y = 47, rule = B3/S23
+10bo$9b2o3bo$8b2ob3obo$10bo2b3o$10bob3o$13b2o$12b2o$12bo$10bo$10bo3bo$
+8b4o3bo$7bo4b2o2bo$7b2obo5bo$10b2o2b3o$10b2o$7b2o2b5o$5b2ob4o3bob2o$6b
+4obo3b4o$10b2o5b3o$10bo4bo$10bo$10b2obobo$10b2o$10b2o3bo$11bo$4bo14bo$
+3b2ob2o8b2ob2o$4bo3bo6bo3bo$3bo2bob8obo2bo$3bob2o3bo2bo3b2obo$6bobo6bo
+bo$3bo3b2o6b2o3bo$2bo18bo$b3o5bo4bo5b3o$bobobo3bo4bo3bobobo$b2o5bo6bo
+5b2o$obo18bobo$3bo16bo$3bo16bo$3bo16bo$bo2bo14bo2bo$2b3o14b3o$4bo14bo
+2$4b2o12b2o2$4b3o10b3o!
 `
 
 function Game() {
@@ -39,7 +44,7 @@ interface IGridViewerProps {
 }
 function GridViewer(props: IGridViewerProps) {
   const dead = ' '
-  const alive = '0'
+  const alive = '='
   const grid = props.grid
 
   let stringGrid = ''
@@ -50,7 +55,11 @@ function GridViewer(props: IGridViewerProps) {
     stringGrid += '\n'
   }
 
-  return <pre style={{ fontFamily: 'Cousine', fontSize: '5px', lineHeight: '0.75em' }}>{stringGrid}</pre>
+  return (
+    <pre style={{ fontFamily: 'Cousine', fontSize: '5px', lineHeight: '0.75em' }}>
+      <Fragment key={new Date().getTime()}>{stringGrid}</Fragment>
+    </pre>
+  )
 }
 
 class Grid {
@@ -122,21 +131,21 @@ class Grid {
     const [, x, y] = headerMatch.map(Number)
 
     const result = new Uint8Array(x * y).fill(0)
-        let i = 0
+    let i = 0
     let j = 0
     const strBody = body.join('').replace('!', '')
     const extractSection = /(\d*)([bo$])/g
     for (const section of strBody.matchAll(extractSection)) {
       const tag = section[2]
-          let count = Number(section[1]) || 1
+      let count = Number(section[1]) || 1
       if (tag === '$') {
         j += count
         i = 0
       } else {
         const state = tag === 'o' ? 1 : 0
         while (count-- > 0) result[pos(x, i++, j)] = state
-          }
-        }
+      }
+    }
 
     const grid = new Grid(x, y)
     grid.cells = result
