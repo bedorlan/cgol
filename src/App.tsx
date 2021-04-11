@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { useEffect, useState } from 'react'
 
 export default function App() {
@@ -39,23 +38,30 @@ interface IGridViewerProps {
   grid: Grid
 }
 function GridViewer(props: IGridViewerProps) {
+  const dead = ' '
+  const alive = '0'
   const grid = props.grid
-  return (
-    <pre style={{ fontFamily: 'Cousine', fontSize: '5px', lineHeight: '0.75em' }}>
-      {_.times(grid.length, j => _.times(grid.width, i => (grid.get(i, j) ? '0' : ' ')).join('')).join('\n')}
-    </pre>
-  )
+
+  let stringGrid = ''
+  for (let j = 0; j < grid.length; ++j) {
+    for (let i = 0; i < grid.width; ++i) {
+      stringGrid += grid.get(i, j) ? alive : dead
+    }
+    stringGrid += '\n'
+  }
+
+  return <pre style={{ fontFamily: 'Cousine', fontSize: '5px', lineHeight: '0.75em' }}>{stringGrid}</pre>
 }
 
 class Grid {
   width: number
   length: number
-  cells: number[]
+  cells: Uint8Array
 
   constructor(x: number, y: number) {
     this.width = x
     this.length = y
-    this.cells = Array(x * y).fill(0)
+    this.cells = new Uint8Array(x * y).fill(0)
   }
 
   get(i: number, j: number) {
@@ -114,7 +120,7 @@ class Grid {
     if (!headerMatch) return null
     const [, x, y] = headerMatch.map(Number)
 
-    const result = Array(x * y).fill(0)
+    const result = new Uint8Array(x * y).fill(0)
     body
       .join()
       .replace('!', '')
@@ -124,7 +130,7 @@ class Grid {
         let i = 0
         for (const section of row.matchAll(extractSection)) {
           let count = Number(section[1]) || 1
-          const state = section[2] === 'o'
+          const state = section[2] === 'o' ? 1 : 0
           while (count-- > 0) {
             result[pos(x, i, j)] = state
             ++i
