@@ -122,22 +122,21 @@ class Grid {
     const [, x, y] = headerMatch.map(Number)
 
     const result = new Uint8Array(x * y).fill(0)
-    body
-      .join()
-      .replace('!', '')
-      .split('$')
-      .forEach((row, j) => {
-        const extractSection = /(\d*)([bo])/g
         let i = 0
-        for (const section of row.matchAll(extractSection)) {
+    let j = 0
+    const strBody = body.join('').replace('!', '')
+    const extractSection = /(\d*)([bo$])/g
+    for (const section of strBody.matchAll(extractSection)) {
+      const tag = section[2]
           let count = Number(section[1]) || 1
-          const state = section[2] === 'o' ? 1 : 0
-          while (count-- > 0) {
-            result[pos(x, i, j)] = state
-            ++i
+      if (tag === '$') {
+        j += count
+        i = 0
+      } else {
+        const state = tag === 'o' ? 1 : 0
+        while (count-- > 0) result[pos(x, i++, j)] = state
           }
         }
-      })
 
     const grid = new Grid(x, y)
     grid.cells = result
