@@ -13,7 +13,7 @@ bo$2bo$3o!
 `
 
 function Game() {
-  const cells = new Grid(100, 100)
+  const cells = new Grid(150, 40)
   const [grid, setGrid] = useState(cells)
 
   useEffect(() => {
@@ -23,8 +23,14 @@ function Game() {
 
   useEffect(() => {
     setInterval(() => {
-      setGrid(g => g.tick())
-    }, 1)
+      setGrid(g => {
+        // let time = new Date().getTime()
+        const newG = g.tick()
+        // time = new Date().getTime() - time
+        // console.log({ time })
+        return newG
+      })
+    }, 20)
   }, [])
 
   return <GridViewer grid={grid} />
@@ -36,18 +42,7 @@ interface IGridViewerProps {
 function GridViewer(props: IGridViewerProps) {
   const grid = props.grid
   return (
-    <table>
-      <tbody>
-        {_.times(grid.length, j => (
-          <tr key={j}>
-            {_.times(grid.width, i => {
-              const key = pos(grid.width, i, j)
-              return <td key={key}>{grid.get(i, j) ? 'o' : '-'}</td>
-            })}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <pre>{_.times(grid.length, j => _.times(grid.width, i => (grid.get(i, j) ? 'o' : ' ')).join('')).join('\n')}</pre>
   )
 }
 
