@@ -34,7 +34,7 @@ function pretty(g: number) {
 let hash5: Uint32Array | null = null
 
 function Game() {
-  const cells = new Grid(1000, 1000)
+  const cells = new Grid(400, 400)
   const [grid, setGrid] = useState(cells)
   const [loaded, setLoaded] = useState<boolean>(false)
   const [fps, setFps] = useState(1)
@@ -87,40 +87,27 @@ interface IGridViewerProps {
   grid: Grid
 }
 function GridViewer(props: IGridViewerProps) {
-  const dead = ' '.charCodeAt(0)
-  const alive = '='.charCodeAt(0)
+  const cellSize = 3
   const grid = props.grid
-  const bufferWidth = grid.width + 1
+  const refCanvas = useRef<HTMLCanvasElement>(null)
 
-  const [buffer] = useState(new Uint8Array(bufferWidth * grid.length))
-  const [textDecoder] = useState(new TextDecoder())
+  useEffect(
+    function draw() {
+      const context = refCanvas.current!.getContext('2d')!
+      context.fillStyle = '#0a1243'
+      context.fillRect(0, 0, context.canvas.width, context.canvas.height)
 
-  for (let j = 0; j < grid.length; ++j) {
-    for (let i = 0; i < grid.width; ++i) {
-      buffer[j * bufferWidth + i] = grid.get(i, j) ? alive : dead
-    }
-    buffer[j * bufferWidth + grid.width] = 10 // '\n'.charCodeAt(0)
-  }
-
-  return (
-    <div
-      style={{
-        contain: 'strict',
-        width: '1000px',
-        height: '1000px',
-        // overflow: 'hidden',
-        // position: 'absolute',
-        whiteSpace: 'pre-wrap',
-        fontFamily: 'Cousine',
-        fontSize: '5px',
-        lineHeight: '0.75em',
-        textRendering: 'optimizeSpeed',
-      }}
-      key="const"
-    >
-      <Fragment key={new Date().getTime()}>{textDecoder.decode(buffer)}</Fragment>
-    </div>
+      context.fillStyle = '#ffffff'
+      for (let j = 0; j < grid.length; ++j) {
+        for (let i = 0; i < grid.width; ++i) {
+          if (grid.get(i, j) > 0) context.fillRect(i * cellSize, j * cellSize, cellSize, cellSize)
+        }
+      }
+    },
+    [props.grid],
   )
+
+  return <canvas width={`${grid.width * cellSize}px`} height={`${grid.length * cellSize}px`} ref={refCanvas}></canvas>
 }
 
 class Grid {
