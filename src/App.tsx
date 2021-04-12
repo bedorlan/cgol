@@ -37,7 +37,7 @@ function Game() {
   const cells = new Grid(400, 400)
   const [grid, setGrid] = useState(cells)
   const [loaded, setLoaded] = useState<boolean>(false)
-  const [fps, setFps] = useState(1)
+  const [fps, setFps] = useState(0)
   const [, setFramesCount] = useState(0)
 
   useEffect(() => {
@@ -57,12 +57,9 @@ function Game() {
   useEffect(() => {
     if (!loaded) return
     setInterval(() => {
-      setGrid(g => {
-        const newG = g.tick2()
-        setFramesCount(c => c + 1)
-        return newG
-      })
-    }, 0)
+      setGrid(g => g.tick2())
+      setFramesCount(c => c + 1)
+    }, 1000 / 60)
   }, [loaded])
 
   useEffect(() => {
