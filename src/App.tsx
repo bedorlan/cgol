@@ -104,7 +104,7 @@ function GridViewer(props: IGridViewerProps) {
         }
       }
     },
-    [props.grid],
+    [grid],
   )
 
   return <canvas width={`${grid.width * cellSize}px`} height={`${grid.length * cellSize}px`} ref={refCanvas}></canvas>
@@ -167,13 +167,7 @@ class Grid {
             x |= this.getSafe(i + di, j + dj) << (dj * hashSize + di)
           }
         }
-        const y = hash5?.[x] || 0
-        // console.log({ x, y })
-        // if (y !== 0) {
-        //   console.log({ i, j })
-        //   console.log(pretty(x))
-        //   console.log(pretty(y))
-        // }
+        const y = hash5![x]
         for (let di = 1; di < hashSize - 1; ++di) {
           for (let dj = 1; dj < hashSize - 1; ++dj) {
             const offset = dj * hashSize + di
