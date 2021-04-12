@@ -103,7 +103,7 @@ function GridViewer(props: IGridViewerProps) {
   }
 
   return (
-    <pre style={{ fontFamily: 'Cousine', fontSize: '5px', lineHeight: '0.75em' }}>
+    <pre style={{ fontFamily: 'Cousine', fontSize: '5px', lineHeight: '0.75em' }} key="const">
       <Fragment key={new Date().getTime()}>{stringGrid}</Fragment>
     </pre>
   )
