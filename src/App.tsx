@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 
 export default function App() {
   return <Game />
@@ -87,13 +87,15 @@ interface IGridViewerProps {
   grid: Grid
 }
 function GridViewer(props: IGridViewerProps) {
-  const dead = ' '.charCodeAt(0)
+  const dead = '.'.charCodeAt(0)
   const alive = '='.charCodeAt(0)
   const grid = props.grid
   const bufferWidth = grid.width + 1
 
-  let [buffer] = useState(new Uint8Array(bufferWidth * grid.length))
-  let [textDecoder] = useState(new TextDecoder())
+  const [buffer] = useState(new Uint8Array(bufferWidth * grid.length))
+  const [textDecoder] = useState(new TextDecoder())
+  const [textNode] = useState(document.createTextNode(''))
+  const textComp = useRef(null)
 
   for (let j = 0; j < grid.length; ++j) {
     for (let i = 0; i < grid.width; ++i) {
@@ -102,10 +104,33 @@ function GridViewer(props: IGridViewerProps) {
     buffer[j * bufferWidth + grid.width] = 10 // '\n'.charCodeAt(0)
   }
 
+  useEffect(() => {
+    ;(textComp as any).current.appendChild(textNode)
+  }, [textNode])
+
+  useEffect(() => {
+    textNode.nodeValue = textDecoder.decode(buffer)
+  }, [props.grid, textNode, buffer, textDecoder])
+
   return (
-    <pre style={{ fontFamily: 'Cousine', fontSize: '5px', lineHeight: '0.75em' }} key="const">
-      <Fragment key={new Date().getTime()}>{textDecoder.decode(buffer)}</Fragment>
-    </pre>
+    <div
+      style={{
+        contain: 'strict',
+        width: '1000px',
+        height: '1000px',
+        // overflow: 'hidden',
+        // position: 'absolute',
+        whiteSpace: 'pre-line',
+        fontFamily: 'Cousine',
+        fontSize: '5px',
+        lineHeight: '0.75em',
+        textRendering: 'optimizeSpeed',
+      }}
+      key="const"
+      ref={textComp}
+    >
+      {/* <Fragment key={new Date().getTime()}>{textDecoder.decode(buffer)}</Fragment> */}
+    </div>
   )
 }
 
