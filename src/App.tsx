@@ -5,12 +5,9 @@ export default function App() {
 }
 
 const gliderRle = `
-#N Gosper glider gun
-#C This was the first gun discovered.
-#C As its name suggests, it was discovered by Bill Gosper.
-x = 36, y = 9, rule = B3/S23
-24bo$22bobo$12b2o6b2o12b2o$11bo3bo4b2o12b2o$2o8bo5bo3b2o$2o8bo3bob2o4b
-obo$10bo5bo7bo$11bo3bo$12b2o!
+# You can save the pattern into this box with Settings/Pattern/Save or Ctrl-S.
+x = 7, y = 3, rule = B3/S23
+o3b3o$3o2bo$bo!
 `
 
 const hashSize = 5
@@ -37,7 +34,7 @@ function pretty(g: number) {
 let hash5: Uint32Array | null = null
 
 function Game() {
-  const cells = new Grid(400, 400)
+  const cells = new Grid(1000, 1000)
   const [grid, setGrid] = useState(cells)
   const [loaded, setLoaded] = useState<boolean>(false)
   const [fps, setFps] = useState(1)
@@ -90,21 +87,24 @@ interface IGridViewerProps {
   grid: Grid
 }
 function GridViewer(props: IGridViewerProps) {
-  const dead = ' '
-  const alive = '='
+  const dead = ' '.charCodeAt(0)
+  const alive = '='.charCodeAt(0)
   const grid = props.grid
+  const bufferWidth = grid.width + 1
 
-  let stringGrid = ''
+  let [buffer] = useState(new Uint8Array(bufferWidth * grid.length))
+  let [textDecoder] = useState(new TextDecoder())
+
   for (let j = 0; j < grid.length; ++j) {
     for (let i = 0; i < grid.width; ++i) {
-      stringGrid += grid.get(i, j) ? alive : dead
+      buffer[j * bufferWidth + i] = grid.get(i, j) ? alive : dead
     }
-    stringGrid += '\n'
+    buffer[j * bufferWidth + grid.width] = 10 // '\n'.charCodeAt(0)
   }
 
   return (
     <pre style={{ fontFamily: 'Cousine', fontSize: '5px', lineHeight: '0.75em' }} key="const">
-      <Fragment key={new Date().getTime()}>{stringGrid}</Fragment>
+      <Fragment key={new Date().getTime()}>{textDecoder.decode(buffer)}</Fragment>
     </pre>
   )
 }
