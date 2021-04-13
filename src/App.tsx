@@ -22,8 +22,9 @@ function Game() {
   const [, setFramesCount] = useState(0)
   const [lexiconFilter, setLexiconFilter] = useState('')
   const [lexicon, setLexicon] = useState<Array<ILexicon>>([])
-  const [currentPattern, setCurrentPattern] = useState<ILexicon | null>(null)
+  const [currentPattern, setCurrentPattern] = useState<Grid | null>(null)
   const fullCanvasRef = useRef<HTMLCanvasElement>(null)
+  const [lastMousePosition, setlLastMousePosition] = useState<{ x: number; y: number } | null>(null)
 
   useEffect(() => {
     Promise.all([
@@ -62,8 +63,18 @@ function Game() {
     <div
       style={{ display: 'flex' }}
       onMouseMove={e => {
+        setlLastMousePosition({ x: e.nativeEvent.pageX, y: e.nativeEvent.pageY })
         if (!currentPattern) return
         drawPreview(e.nativeEvent.pageX, e.nativeEvent.pageY)
+      }}
+      onKeyUp={e => {
+        if (e.key !== ' ') return
+        setCurrentPattern(currentPattern => {
+          if (!currentPattern) return currentPattern
+          const newPattern = currentPattern.rotate90()
+          if (lastMousePosition) drawPreview(lastMousePosition.x, lastMousePosition.y)
+          return newPattern
+        })
       }}
       onMouseUp={e => {
         fullCanvasRef.current!.getContext('2d')!.clearRect(0, 0, window.innerWidth, window.innerHeight)
@@ -96,7 +107,7 @@ function Game() {
                     key={lex.name}
                     title={lex.desc}
                     onMouseDown={e => {
-                      setCurrentPattern(lex)
+                      setCurrentPattern(Grid.fromLexicon(lex.grid))
                       drawPreview(e.nativeEvent.pageX, e.nativeEvent.pageY)
                     }}
                   >
@@ -110,7 +121,7 @@ function Game() {
             grid={grid}
             onMouseUp={c => {
               if (!currentPattern) return
-              const newGrid = Grid.fromLexicon(currentPattern.grid)
+              const newGrid = currentPattern
               setGrid(g => g.copyFrom(newGrid, c.x, c.y))
               fullCanvasRef.current!.getContext('2d')!.clearRect(0, 0, window.innerWidth, window.innerHeight)
               setCurrentPattern(null)
@@ -127,7 +138,7 @@ function Game() {
       const context = fullCanvasRef.current!.getContext('2d')!
       context.clearRect(0, 0, window.innerWidth, window.innerHeight)
       context.fillStyle = '#00ff00'
-      drawGridOnCanvas(context, x, y, Grid.fromLexicon(currentPattern.grid), cellSize)
+      drawGridOnCanvas(context, x, y, currentPattern, cellSize)
       return currentPattern
     })
   }
@@ -248,6 +259,16 @@ class Grid {
       for (let i = 0; i < other.width; ++i) {
         if (i + x >= this.width) break
         copy.set(i + x, j + y, other.get(i, j))
+      }
+    }
+    return copy
+  }
+
+  rotate90() {
+    const copy = new Grid(this.length, this.width)
+    for (let j = 0; j < this.length; ++j) {
+      for (let i = 0; i < this.width; ++i) {
+        copy.set(this.length - 1 - j, i, this.get(i, j))
       }
     }
     return copy
