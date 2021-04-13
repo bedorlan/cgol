@@ -1,17 +1,17 @@
-import { Fragment, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export default function App() {
   return <Game />
 }
 
-const gliderRle = `
-# You can save the pattern into this box with Settings/Pattern/Save or Ctrl-S.
-x = 7, y = 3, rule = B3/S23
-o3b3o$3o2bo$bo!
-`
-
 const hashSize = 5
 let hash5: Uint32Array | null = null
+
+interface ILexicon {
+  name: string
+  desc: string
+  grid: string[]
+}
 
 function Game() {
   const cells = new Grid(200, 200)
@@ -20,18 +20,8 @@ function Game() {
   const [fps, setFps] = useState(0)
   const [, setFramesCount] = useState(0)
   const [lexiconFilter, setLexiconFilter] = useState('')
-  const [lexicon, setLexicon] = useState<
-    Array<{
-      name: string
-      desc: string
-      grid: string[]
-    }>
-  >([])
-
-  useEffect(() => {
-    const glider = Grid.fromRle(gliderRle)
-    if (glider) setGrid(g => g.copyFrom(glider, 100, 100))
-  }, [])
+  const [lexicon, setLexicon] = useState<Array<ILexicon>>([])
+  const [currentPattern, setCurrentPattern] = useState<ILexicon | null>(null)
 
   useEffect(() => {
     Promise.all([
@@ -41,7 +31,7 @@ function Game() {
 
       fetch('lexicon.json')
         .then(res => res.json())
-        .then(lex => setLexicon(lex)),
+        .then((lex: ILexicon[]) => setLexicon(lex.filter(lex => lex.grid.length))),
     ]).then(() => setLoaded(true))
   }, [])
 
@@ -63,7 +53,7 @@ function Game() {
   }, [])
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
+    <div style={{ display: 'flex', flexDirection: 'column' }} onMouseUp={e => setCurrentPattern(null)}>
       <div>FPS={fps}</div>
       <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', height: '600px' }}>
         <div style={{ display: 'flex', flexDirection: 'column', width: '25em' }}>
@@ -74,15 +64,31 @@ function Game() {
             value={lexiconFilter}
             onChange={e => setLexiconFilter(e.target.value)}
           />
-          <ul className="list-group" style={{ height: '30em', overflow: 'scroll' }}>
+          <div className="list-group" style={{ height: '30em', overflow: 'scroll' }}>
             {lexicon
-              .filter(lex => lex.name.toLowerCase().includes(lexiconFilter.toLowerCase()))
+              .filter(lex => lex.name.toLowerCase().startsWith(lexiconFilter.toLowerCase()))
               .map(lex => (
-                <li className="list-group-item">{lex.name}</li>
+                <button
+                  type="button"
+                  className="list-group-item list-group-item-action"
+                  style={{ cursor: 'move' }}
+                  key={lex.name}
+                  onMouseDown={e => setCurrentPattern(lex)}
+                >
+                  {lex.name}
+                </button>
               ))}
-          </ul>
+          </div>
         </div>
-        <GridViewer grid={grid} />
+        <GridViewer
+          grid={grid}
+          onMouseUp={c => {
+            if (!currentPattern) return
+            const newGrid = Grid.fromLexicon(currentPattern.grid)
+            setGrid(g => g.copyFrom(newGrid, c.x, c.y))
+            setCurrentPattern(null)
+          }}
+        />
       </div>
     </div>
   )
@@ -90,6 +96,7 @@ function Game() {
 
 interface IGridViewerProps {
   grid: Grid
+  onMouseUp?: (coor: { x: number; y: number }) => void
 }
 function GridViewer(props: IGridViewerProps) {
   const cellSize = 3
@@ -112,7 +119,20 @@ function GridViewer(props: IGridViewerProps) {
     [grid],
   )
 
-  return <canvas width={`${grid.width * cellSize}px`} height={`${grid.length * cellSize}px`} ref={refCanvas}></canvas>
+  return (
+    <canvas
+      width={`${grid.width * cellSize}px`}
+      height={`${grid.length * cellSize}px`}
+      onMouseUp={e => {
+        e.stopPropagation()
+        props.onMouseUp?.({
+          x: Math.floor(e.nativeEvent.offsetX / cellSize),
+          y: Math.floor(e.nativeEvent.offsetY / cellSize),
+        })
+      }}
+      ref={refCanvas}
+    ></canvas>
+  )
 }
 
 class Grid {
@@ -225,6 +245,18 @@ class Grid {
 
     const grid = new Grid(x, y)
     grid.cells = result
+    return grid
+  }
+
+  static fromLexicon(gridText: ILexicon['grid']) {
+    const width = gridText[0].length
+    const length = gridText.length
+    const grid = new Grid(width, length)
+    for (let j = 0; j < length; ++j) {
+      for (let i = 0; i < width; ++i) {
+        grid.cells[pos(width, i, j)] = gridText[j].charAt(i) === '1' ? 1 : 0
+      }
+    }
     return grid
   }
 }
