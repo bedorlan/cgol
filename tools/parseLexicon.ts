@@ -2,7 +2,7 @@ import fs = require('fs')
 
 const lexicon = fs.readFileSync(0, 'utf-8')
 const [head, patterns, end] = lexicon.split('-'.repeat(71))
-const extractPattern = /:(.*?):(.*?(?=(?:\n:|\t|\s*$)))((\t[^\s]*\n)*)/gs
+const extractPattern = /:([^\n]*?):(.*?(?=(?:\n:|\t|\s*$)))((\t[^\s]*\n)*)/gs
 const result = []
 for (const pattern of patterns.matchAll(extractPattern)) {
   const [, name, desc, grid] = pattern

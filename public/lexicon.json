@@ -2094,19 +2094,6 @@
     ]
   },
   {
-    "name": "\n\t..*....\n\t.*.*...\n\t*..*...\n\t.**.**.\n\t...*..*\n\t...*.*.\n\t....*..\n   or the following {pure glider generator}",
-    "desc": "\n",
-    "grid": [
-      "0010",
-      "0101",
-      "1001",
-      "0110",
-      "1001",
-      "1010",
-      "0100"
-    ]
-  },
-  {
     "name": "bipole",
     "desc": " (p2)  The {barberpole} of length 2.\n",
     "grid": [
@@ -2267,8 +2254,8 @@
     ]
   },
   {
-    "name": "\n\t.............***.\n\t............*****\n\t...........**.***\n\t............**...\n\t.................\n\t.................\n\t.........*.*.....\n\t..*.....*..*.....\n\t.*****...*.*.....\n\t**...**.**.......\n\t.*.......*.......\n\t..**..*..*.......\n\t..........*......\n\t..**..*..*.......\n\t.*.......*.......\n\t**...**.**.......\n\t.*****...*.*.....\n\t..*.....*..*.....\n\t.........*.*.....\n\t.................\n\t.................\n\t............**...\n\t...........**.***\n\t............*****\n\t.............***.\n   The importance of this larger blinker puffer (and others like it), is\n   that the engine which produces the blinker output is only p4.  The\n   blinker row produced by the puffer can easily be ignited, and the\n   resulting {blinker fuse} burns cleanly with a speed of 2c/3.  When\n   the burning catches up to the engine, it causes a {phase change} in\n   the puffer.  This fact allows p8 blinker puffers to be used to\n   construct rakes of all periods which are large multiples of four.\n\n",
-    "desc": "blinker pull:  The following glider/blinker collision, which moves a\n   blinker (-1,3) toward the glider source:\n",
+    "name": "blinker pull",
+    "desc": "  The following glider/blinker collision, which moves a\n   blinker (-1,3) toward the glider source:\n",
     "grid": [
       "1110",
       "0000",
@@ -2321,8 +2308,8 @@
     ]
   },
   {
-    "name": "\n\t..*.*....\n\t..**.....\n\t...*.....\n\t.........\n\t.......**\n\t***....**\n\t..*......\n\t.*.......\n\n",
-    "desc": "blockade: (p1)  A common formation of four blocks.  The final form of\n   {lumps of muck}.\n",
+    "name": "blockade",
+    "desc": " (p1)  A common formation of four blocks.  The final form of\n   {lumps of muck}.\n",
     "grid": [
       "11000000000000000000000",
       "11000000000000000000000",
@@ -3564,8 +3551,8 @@
     ]
   },
   {
-    "name": "\n\t**...****.....\n\t..***....*****\n\n",
-    "desc": "chirality:  A term borrowed from chemistry to describe asymmetrical\n   patterns with two distinct mirror-image orientations.  One common use\n   is in relation to {Herschel transmitter}s, where the spacing between\n   the two gliders in the {tandem glider} output can limit the\n   {receiver} to a single chirality.\n",
+    "name": "chirality",
+    "desc": "  A term borrowed from chemistry to describe asymmetrical\n   patterns with two distinct mirror-image orientations.  One common use\n   is in relation to {Herschel transmitter}s, where the spacing between\n   the two gliders in the {tandem glider} output can limit the\n   {receiver} to a single chirality.\n",
     "grid": []
   },
   {
@@ -3673,8 +3660,8 @@
     ]
   },
   {
-    "name": "\n\t.........*........*................................\n\t.........***......***..............................\n\t............*........*.............................\n\t...........**.......**.............................\n\t...................................................\n\t.................................................*.\n\t................................................*.*\n\t................................................*.*\n\t.................................................*.\n\t......................................*............\n\t............**........................*............\n\t.............*........................***..........\n\t.............*.*........................*..........\n\t..............**...................................\n\t...................................................\n\t...................................................\n\t........*..............................**..........\n\t........***........................*...**..........\n\t...........*......................*.*..............\n\t..........**.....................*.*...............\n\t.................................*.................\n\t................................**.................\n\t...................................................\n\t...................................................\n\t...................................................\n\t...................................................\n\t.........*.........................................\n\t.........*.*.......................................\n\t.........***.......................................\n\t...........*.......................................\n\t...................................................\n\t..................**...*...........................\n\t...................*....**.........................\n\t................***...**...........................\n\t..**............*.......*..........................\n\t...*...............................................\n\t***................................................\n\t*..................................................\n\n",
-    "desc": "clock II: (p4)  Compare with {pinwheel}.\n",
+    "name": "clock II",
+    "desc": " (p4)  Compare with {pinwheel}.\n",
     "grid": [
       "000000110000",
       "000000110000",
@@ -4319,8 +4306,8 @@
     ]
   },
   {
-    "name": "\n\t....**.\n\t...*.*.\n\t...*...\n\t**.*...\n\t**.*..*\n\t...*.**\n\t...*...\n\t..**...\n\n",
-    "desc": "curl:  = {loop}\n",
+    "name": "curl",
+    "desc": "  = {loop}\n",
     "grid": []
   },
   {
@@ -4969,8 +4956,8 @@
     ]
   },
   {
-    "name": "\n\t.**..........................\n\t*..*.........................\n\t.**..........................\n\t.............................\n\t.......*.*...................\n\t.......*.....................\n\t.......*.*..*..*.............\n\t..........*..................\n\t...........*.**.*............\n\t............***.*............\n\t...........*....*..*.**......\n\t........*...**...*.****......\n\t........**..*..*.**....*....*\n\t........*........**....*..***\n\t.............**...**...*..**.\n\t.**..........................\n\t*..*.........................\n\t.**..........................\n\n",
-    "desc": "edge shooter:  A {gun} or {signal} {circuit} that fires its gliders (or\n   whatever) right at the edge of the pattern, so that it can be used to\n   fire them closely parallel to others.  This is useful for\n   constructing complex guns.  Compare {glider pusher}, which can in\n   fact be used for making edge shooters.\n     The following diagram shows a p46 edge shooter found by Paul\n   Callahan in June 1994.\n",
+    "name": "edge shooter",
+    "desc": "  A {gun} or {signal} {circuit} that fires its gliders (or\n   whatever) right at the edge of the pattern, so that it can be used to\n   fire them closely parallel to others.  This is useful for\n   constructing complex guns.  Compare {glider pusher}, which can in\n   fact be used for making edge shooters.\n     The following diagram shows a p46 edge shooter found by Paul\n   Callahan in June 1994.\n",
     "grid": [
       "110000000000001100100001100110000000000000",
       "110000000000001011000000110110000000000000",
@@ -5795,8 +5782,8 @@
     ]
   },
   {
-    "name": "\n\t.**.....\n\t*.*.....\n\t..*..*..\n\t.....*.*\n\t.....**.\n\n",
-    "desc": "fourteener: (p1)\n",
+    "name": "fourteener",
+    "desc": " (p1)\n",
     "grid": [
       "0000110",
       "1100101",
@@ -7905,8 +7892,8 @@
     ]
   },
   {
-    "name": "\n\t........*.*\n\t........**.\n\t.........*.\n\t...........\n\t***........\n\t..*........\n\t.*...***...\n\t.......*...\n\t......*....\n\n",
-    "desc": "HWSS emulator:  = {HW emulator}\n",
+    "name": "HWSS emulator",
+    "desc": "  = {HW emulator}\n",
     "grid": []
   },
   {
@@ -8598,8 +8585,8 @@
     ]
   },
   {
-    "name": "\n\t...*.....\n\t.***.....\n\t*........\n\t******...\n\t......*..\n\t..*...*..\n\t..**.*...\n\t......***\n\t........*\n\n",
-    "desc": "lightspeed bubble:  A type of {negative spaceship} travelling through\n   the {zebra stripes} agar.  The center of the bubble is simple empty\n   space, and the length and/or width of the bubble can usually be\n   extended to any desired size.\n     Below is a small stabilized section of agar containing a sample\n   lightspeed bubble, found by Gabriel Nivasch in August 1999.  The\n   bubble travels to the left at the {speed of light}, so it will\n   eventually reach the edge of any finite patch and destroy itself and\n   its supporting agar.\n",
+    "name": "lightspeed bubble",
+    "desc": "  A type of {negative spaceship} travelling through\n   the {zebra stripes} agar.  The center of the bubble is simple empty\n   space, and the length and/or width of the bubble can usually be\n   extended to any desired size.\n     Below is a small stabilized section of agar containing a sample\n   lightspeed bubble, found by Gabriel Nivasch in August 1999.  The\n   bubble travels to the left at the {speed of light}, so it will\n   eventually reach the edge of any finite patch and destroy itself and\n   its supporting agar.\n",
     "grid": [
       "01001001001001001001001001001001001001001001001001001001001000",
       "01111111111111111111111111111111111111111111111111111111111110",
@@ -8883,8 +8870,8 @@
     ]
   },
   {
-    "name": "\n\t.................................*\n\t...............................**.\n\t................................**\n\t.........*........................\n\t.*........*.......................\n\t..*.....***.......................\n\t***...............................\n\t..................................\n\t..................................\n\t.....*............................\n\t......*...........................\n\t....***...........................\n\t........................*.*.......\n\t.........................**.......\n\t.........................*........\n\t..................................\n\t...........................*.*....\n\t...........................**.....\n\t............................*.....\n\t...............................***\n\t...............................*..\n\t................................*.\n\t..................................\n\t..................................\n\t..................................\n\t..................................\n\t..................................\n\t..................................\n\t.....**...........................\n\t......**..........................\n\t.....*............................\n   The loafer was therefore the first new glider-constructible spaceship\n   in almost a decade.  (A {glider synthesis} for a 2c/5 ship,\n   {60P5H2V0}, was found in March 2003.)\n\n",
-    "desc": "loaflipflop: (p15)  Here four {pentadecathlon}s {hassle} a {loaf}.\n   Found by Robert Wainwright in 1990.\n",
+    "name": "loaflipflop",
+    "desc": " (p15)  Here four {pentadecathlon}s {hassle} a {loaf}.\n   Found by Robert Wainwright in 1990.\n",
     "grid": [
       "0000000000000000100000000000000000",
       "0000000000000001110000000000000000",
@@ -9276,8 +9263,8 @@
     ]
   },
   {
-    "name": "\n\t.*.....\n\t*......\n\t***....\n\t.....**\n\t....**.\n\t......*\n\t.......\n\t..**...\n\t...**..\n\t..*....\n\n",
-    "desc": "LWSS emulator:  = {LW emulator}\n",
+    "name": "LWSS emulator",
+    "desc": "  = {LW emulator}\n",
     "grid": []
   },
   {
@@ -9404,8 +9391,8 @@
     "grid": []
   },
   {
-    "name": "\n   there are usually many different tiles defined at each level, not\n   just one.  Chaotic patterns, such as {ash} from random {soup}s,\n   usually need so many different tile definitions that they can be\n   stored more efficiently using {rle} format.\n\n",
-    "desc": "macro-spaceship:  A {self-constructing} or {self-supporting}\n   {spaceship}, such as the {Caterpillar}, {Centipede},\n   {half-baked knightship}, {waterbear}, {Demonoid}, {Orthogonoid}, and\n   {Caterloopillar}.  Engineered spaceships of these types tend to be\n   much larger and more complex than {elementary} spaceships.\n",
+    "name": "macro-spaceship",
+    "desc": "  A {self-constructing} or {self-supporting}\n   {spaceship}, such as the {Caterpillar}, {Centipede},\n   {half-baked knightship}, {waterbear}, {Demonoid}, {Orthogonoid}, and\n   {Caterloopillar}.  Engineered spaceships of these types tend to be\n   much larger and more complex than {elementary} spaceships.\n",
     "grid": []
   },
   {
@@ -9880,8 +9867,8 @@
     ]
   },
   {
-    "name": "\n\t...........*..\n\t...........*.*\n\t...........**.\n\t..............\n\t..............\n\t.*......**....\n\t.**.....*.*...\n\t*.*.....*.....\n\n",
-    "desc": "MWSS emulator:  = {MW emulator}\n",
+    "name": "MWSS emulator",
+    "desc": "  = {MW emulator}\n",
     "grid": []
   },
   {
@@ -10246,11 +10233,6 @@
     ]
   },
   {
-    "name": "  it can only add gliders on\n   the outermost lanes of an existing glider {salvo}.  Like the beehive\n   version of {SW-2}, either output can be used to build logical OR\n   gates, where multiple input {signal} paths are merged onto the same\n   output path.\n     The complete name for this converter is \"NW31T120\", where 31 is the\n   output glider lane number.  In the above orientation, lane numbers\n   get bigger toward the upper right and smaller toward the lower left\n   (and may easily be negative).\n     The T120 timing measurement means that a canonical NW glider placed\n   on lane 31 at time T=120, at (+31, +0) relative to the input\n   Herschel, would in theory reach the exact same spacetime locations as\n   the converter's output glider does.\n     Most converters are not edge shooters and their output lanes are\n   not transparent, so they usually have catalysts that would interfere\n   with this theoretically equivalent glider.  This is the case for the\n   optional third glider output created by the lower {eater1} catalyst",
-    "desc": "\n   the upper eater1 overlaps its {lane}.  For the alternate {block}\n   catalyst suppressing this glider output, see {transparent lane}.\n",
-    "grid": []
-  },
-  {
     "name": "NW31T120",
     "desc": "  = {NW31}\n",
     "grid": []
@@ -10431,8 +10413,8 @@
     ]
   },
   {
-    "name": "\n\t.**..........\n\t**...........\n\t..*..........\n\t....*....***.\n\t....***....**\n\t.....***.*.*.\n\t............*\n\t.....*.*.....\n\t....**.*.....\n\t.....*.......\n\t...**.*......\n\t......*......\n\t....**.......\n\n",
-    "desc": "orphan:  Conway's preferred term for a {Garden of Eden}.  According to\n   some definitions, an orphan consists of just the minimum living and\n   dead cells needed to ensure that no parent is possible, whereas a GoE\n   is an entire infinite Life plane that contains an orphan.\n",
+    "name": "orphan",
+    "desc": "  Conway's preferred term for a {Garden of Eden}.  According to\n   some definitions, an orphan consists of just the minimum living and\n   dead cells needed to ensure that no parent is possible, whereas a GoE\n   is an entire infinite Life plane that contains an orphan.\n",
     "grid": []
   },
   {
@@ -11609,8 +11591,8 @@
     ]
   },
   {
-    "name": "\n\t*........................\n\t***......................\n\t...*.....................\n\t..**.....................\n\t.........................\n\t......*..................\n\t.....****................\n\t......*..*...............\n\t.......***...............\n\t.........................\n\t..........***............\n\t..........*..*...........\n\t...........****..........\n\t.............*...........\n\t.........................\n\t.................*.......\n\t................***......\n\t.................*.*.....\n\t.................*.*.....\n\t..................**.....\n\t.....................**..\n\t.....................*.*.\n\t.......................*.\n\t.......................**\n\n",
-    "desc": "p72 quasi-shuttle: (p72)  The following {oscillator}, found by Jason\n   Summers in August 2005.  Although this looks at first sight like a\n   {shuttle}, it isn't really.\n",
+    "name": "p72 quasi-shuttle",
+    "desc": " (p72)  The following {oscillator}, found by Jason\n   Summers in August 2005.  Although this looks at first sight like a\n   {shuttle}, it isn't really.\n",
     "grid": [
       "0000000000000000000000000000001000000",
       "0000000000000000000000000000011000000",
@@ -11712,8 +11694,8 @@
     ]
   },
   {
-    "name": "\n\t.....**..................................\n\t......***................................\n\t....*....*...............................\n\t..******.*.............................*.\n\t.*.....*.**....**.....................*..\n\t.*.**.*....*..*.*.....................***\n\t..*...*.**.*..*..........................\n\t....*.*..*.**.*..........................\n\t...**...*.....**.........................\n\t..*..**.*.****..*...**...................\n\t*..*...*.*...*.*...*.*..........*........\n\t**.*...*..**.*..****..**.......*.........\n\t.*.*.**.*.*.*.*.*...**..*......***.......\n\t*..***..*.....*....*..*.*................\n\t*.*...*.**...**....*.**.**.........**....\n\t.*.****..*..*.*....*.....*.....**..**....\n\t...*...*......**...*..****....*.*........\n\t...*.**..*..*.*....*.....*.....*.........\n\t....*.*.**...**....*.**.**...............\n\t......*.*.....*....*..*.*........**......\n\t......*.*...*.*.*...**..*........*.......\n\t.......*...*.*..****..**..........***....\n\t...........*.*.*...*.*..............*....\n\t............**.**...**...................\n\n",
-    "desc": "p7 reflector:  Traditional name for {p7 bouncer} before 2016, but with\n   the discovery of the {p7 bumper} this has become an ambiguous\n   reference.\n",
+    "name": "p7 reflector",
+    "desc": "  Traditional name for {p7 bouncer} before 2016, but with\n   the discovery of the {p7 bumper} this has become an ambiguous\n   reference.\n",
     "grid": []
   },
   {
@@ -12337,8 +12319,8 @@
     ]
   },
   {
-    "name": "\n\t   ......................*...........................\n\t......................***...**....................\n\t..............**.........*..*..**.................\n\t..............**........**...**..*................\n\t...............................*.***..............\n\t...............................*....*.**..........\n\t................................*.*.*.*.*.........\n\t...............................**.**...*..........\n\t**................................................\n\t.*...................................*****........\n\t.*.*.................................*...*........\n\t..**...................................*..........\n\t.........................***..........***.........\n\t...........................*.............*........\n\t.........................***............**........\n\t..................................................\n\t..................................................\n\t..................................................\n\t..*...............................................\n\t..*.*...............................**...........*\n\t..***...............................**.........***\n\t....*..........................................*..\n\t...............................................*..\n\t..............**........**........................\n\t..............**..**.....*........................\n\t..................*.*.***.........................\n\t....................*.*...........................\n\t....................**....**......................\n\t.........................*.*....**................\n\t.........................*......**................\n\t........................**........................\n\n",
-    "desc": "phase:  A representative generation of a periodic object such as an\n   {oscillator} or {spaceship}.  The number of phases is equal to the\n   {period} of the object.  The phases of an object usually repeat in\n   the same cyclic sequence forever, although some {perturbation}s can\n   cause a {phase change}.\n",
+    "name": "phase",
+    "desc": "  A representative generation of a periodic object such as an\n   {oscillator} or {spaceship}.  The number of phases is equal to the\n   {period} of the object.  The phases of an object usually repeat in\n   the same cyclic sequence forever, although some {perturbation}s can\n   cause a {phase change}.\n",
     "grid": []
   },
   {
@@ -12742,8 +12724,8 @@
     ]
   },
   {
-    "name": "\n\t.*..........\n\t..*.........\n\t***.........\n\t............\n\t............\n\t...***....**\n\t.....*...**.\n\t....*......*\n\n",
-    "desc": "pre-pulsar:  A common {predecessor} of the {pulsar}, such as that shown\n   below.  This duplicates itself in 15 generations.  (It fails,\n   however, to be a true {replicator} because of the way the two copies\n   then interact.)\n",
+    "name": "pre-pulsar",
+    "desc": "  A common {predecessor} of the {pulsar}, such as that shown\n   below.  This duplicates itself in 15 generations.  (It fails,\n   however, to be a true {replicator} because of the way the two copies\n   then interact.)\n",
     "grid": [
       "111000111",
       "101000101",
@@ -12902,8 +12884,8 @@
     ]
   },
   {
-    "name": "//oeis.org/A056613}.  The unique 32-bit {triple pseudo}\n   still life is included in the last count in the table.  As the number\n   of bits increases, the pseudo still life count goes up exponentially\n   by approximately O(2.56^n).  By comparison, the rate for\n   {strict still life}s is about O(2.46^n) while for {quasi still life}s\n   it's around O(3.04^n).\n     If a stable pattern's live cells plus its overpopulated dead cells\n   do not form a single mutually adjacent group, the pattern is usually\n   referred to as a {constellation}.  It is also a {still life} in the\n   general sense, but is neither \"pseudo\" nor \"strict\".\n\n",
-    "desc": "puffer:  An object that moves like a {spaceship}, except that it leaves\n   debris behind.  The first known puffers were found by Bill Gosper and\n   travelled at c/2 orthogonally (see diagram below for the very first\n   one, found in 1971).\n",
+    "name": "puffer",
+    "desc": "  An object that moves like a {spaceship}, except that it leaves\n   debris behind.  The first known puffers were found by Bill Gosper and\n   travelled at c/2 orthogonally (see diagram below for the very first\n   one, found in 1971).\n",
     "grid": [
       "011100000010000010000001110",
       "100100000111000111000001001",
@@ -12987,8 +12969,8 @@
     ]
   },
   {
-    "name": "\n\t***...........***.\n\t*..*..........*..*\n\t*......***....*...\n\t*.....*..*....*...\n\t.*.*..*...*....*.*\n\t.......****.......\n\t.........*........\n\t..................\n\t..................\n\t..................\n\t.......***........\n\t.......*..........\n\t........*.........\n\n",
-    "desc": "puff suppressor:  An attachment at the back of a {line puffer} that\n   suppresses all or some of its puffing action.  The example below (by\n   Hartmut Holzwart) has a 3-cell puff suppressor at the back which\n   suppresses the entire puff, making a p2 {spaceship}.  If you delete\n   this puff suppressor then you get a p60 double {beehive} {puffer}.\n   Puff suppressors were first recognised by Alan Hensel in April 1994.\n",
+    "name": "puff suppressor",
+    "desc": "  An attachment at the back of a {line puffer} that\n   suppresses all or some of its puffing action.  The example below (by\n   Hartmut Holzwart) has a 3-cell puff suppressor at the back which\n   suppresses the entire puff, making a p2 {spaceship}.  If you delete\n   this puff suppressor then you get a p60 double {beehive} {puffer}.\n   Puff suppressors were first recognised by Alan Hensel in April 1994.\n",
     "grid": [
       "000000000000100000000000000000000",
       "000000000011010000000000000000000",
@@ -14023,8 +14005,8 @@
     ]
   },
   {
-    "name": "\n\t................................*.........\n\t..............................***.........\n\t.............................*............\n\t..................*..........**...........\n\t.................*.*......................\n\t.................*.*......................\n\t...............***.**....................*\n\t..............*........................***\n\t........*......***.**.................*...\n\t........***......*.**.................**..\n\t...........*..............................\n\t..........**..............................\n\t...................................**.....\n\t..................................*..*....\n\t...................................**.....\n\t..........................................\n\t..........................................\n\t..........................................\n\t.........*................................\n\t.........*.*..............................\n\t.........***..............................\n\t...........*...........**.................\n\t.......................*..................\n\t........................***...............\n\t..........................*...............\n\t..........................................\n\t..**......................................\n\t...*......................................\n\t***.......................................\n\t*.........................................\n   The above H-to-2G mechanism appears in many places in the glider gun\n   collection, for example, mainly for periods below 78 where {syringe}s\n   can't be used to build small true-period guns.  The insertion\n   reaction allows a glider to be placed 19 ticks in front of another\n   glider on the same lane, or 30 ticks behind it (28 if the\n   perpendicular glider output is suppressed.)\n\n",
-    "desc": "rock:  Dean Hickerson's term for an {eater} which remains intact\n   throughout the eating process.  The {snake} in Dave Buckingham's\n   59-step B-to-Herschel conduit (shown under {conduit}) is an example.\n   Other still lifes that sometimes act as rocks include the {tub}, the\n   {hook with tail}, the {eater1} (eating with its tail) and the {hat}\n   (in Heinrich Koenig's stabilization of the {twin bees shuttle}).\n",
+    "name": "rock",
+    "desc": "  Dean Hickerson's term for an {eater} which remains intact\n   throughout the eating process.  The {snake} in Dave Buckingham's\n   59-step B-to-Herschel conduit (shown under {conduit}) is an example.\n   Other still lifes that sometimes act as rocks include the {tub}, the\n   {hook with tail}, the {eater1} (eating with its tail) and the {hat}\n   (in Heinrich Koenig's stabilization of the {twin bees shuttle}).\n",
     "grid": []
   },
   {
@@ -14550,15 +14532,6 @@
       "110",
       "101",
       "011"
-    ]
-  },
-  {
-    "name": "\n\t...**.\n\t...*.*\n\t....**\n\t......\n\t*.....\n\t**....\n\t*.....\n   It is also a one-glider {seed} for the {engine} of the\n   {queen bee shuttle}",
-    "desc": "\n",
-    "grid": [
-      "11100110",
-      "00100101",
-      "01000011"
     ]
   },
   {
@@ -16496,8 +16469,8 @@
     ]
   },
   {
-    "name": "\n\t***................\n\t..*................\n\t.*.................\n\t...................\n\t.......**..........\n\t......**...........\n\t........*..........\n\t...................\n\t...................\n\t...................\n\t...................\n\t...................\n\t...................\n\t...................\n\t..**...............\n\t.*.*...............\n\t...*...............\n\t...................\n\t................***\n\t................*..\n\t.................*.\n   Running the above for 20 ticks completes a {kickback} reaction with\n   the top two gliders, resulting in the three-glider switch engine\n   recipe discovered by Luka Okanishi on 12 March 2017.\n\n",
-    "desc": "switch engine channel:  Two lines of {boat}s (or other suitable\n   objects, such as {tub with tail}s) arranged so that a {switch engine}\n   can travel between them, in the following manner:\n",
+    "name": "switch engine channel",
+    "desc": "  Two lines of {boat}s (or other suitable\n   objects, such as {tub with tail}s) arranged so that a {switch engine}\n   can travel between them, in the following manner:\n",
     "grid": [
       "00000000000000110000000000000000",
       "00000000000001010000000000000000",
@@ -17931,8 +17904,8 @@
     ]
   },
   {
-    "name": "\n\t*..*.........\n\t....*........\n\t*...*.....*..\n\t.****....***.\n\t........*...*\n\t........**.**\n\t........**.**\n\t.............\n\t........**.**\n\t........**.**\n\t........*...*\n\t.........***.\n\t..........*..\n\n",
-    "desc": "twinhat: (p1)  See also {hat} and {sesquihat}.\n",
+    "name": "twinhat",
+    "desc": " (p1)  See also {hat} and {sesquihat}.\n",
     "grid": [
       "001000100",
       "010101010",
@@ -18262,8 +18235,8 @@
     ]
   },
   {
-    "name": "\n\t.*...\n\t**..*\n\t...*.\n\t....*\n   Also see {PD-pair reflector}.\n\n",
-    "desc": "Wainwright's tagalong:  A small p4 c/4 diagonal {tagalong} that has 7\n   cells in every phase.  It is shown here attached to the back of a\n   {Canada goose}.\n",
+    "name": "Wainwright's tagalong",
+    "desc": "  A small p4 c/4 diagonal {tagalong} that has 7\n   cells in every phase.  It is shown here attached to the back of a\n   {Canada goose}.\n",
     "grid": [
       "1110000000000000",
       "1000000000110000",
@@ -18487,8 +18460,8 @@
     ]
   },
   {
-    "name": "\n   see {tubstretcher} and {linestretcher}.  In July 2000 Jason Summers\n   constructed a c/2 wickstretcher, stretching a p50 {traffic jam} wick,\n   based on an earlier (October 1994) pattern by Hickerson.  A c/5\n   diagonal wickstretcher was found in January 2011 by Matthias\n   Merzenich, who also discovered a c/5 orthogonal wickstretcher two\n   years later in March 2013.\n\n",
-    "desc": "wicktrailer:  Any {extensible} {tagalong} or {component} that can be\n   attached to itself, as well as to the back of a {spaceship}.  The\n   number of generations that it takes for the component to occur again\n   in the same place is often called the period of the wicktrailer.\n   This has little relation to the period of the component.  See\n   {branching spaceship} for an example of a wicktrailer that is part of\n   a p2 spaceship, but repeats itself in the same location at period 20.\n",
+    "name": "wicktrailer",
+    "desc": "  Any {extensible} {tagalong} or {component} that can be\n   attached to itself, as well as to the back of a {spaceship}.  The\n   number of generations that it takes for the component to occur again\n   in the same place is often called the period of the wicktrailer.\n   This has little relation to the period of the component.  See\n   {branching spaceship} for an example of a wicktrailer that is part of\n   a p2 spaceship, but repeats itself in the same location at period 20.\n",
     "grid": []
   },
   {
