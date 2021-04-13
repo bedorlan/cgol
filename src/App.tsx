@@ -11,47 +11,38 @@ o3b3o$3o2bo$bo!
 `
 
 const hashSize = 5
-
-function get(g: number, i: number, j: number) {
-  if (i < 0 || i >= hashSize || j < 0 || j >= hashSize) return 0
-  const offset = j * hashSize + i
-  return (g & (1 << offset)) >>> offset
-}
-
-function pretty(g: number) {
-  let result = ''
-  for (let j = 0; j < hashSize; ++j) {
-    result += get(g, 0, j)
-    result += get(g, 1, j)
-    result += get(g, 2, j)
-    result += get(g, 3, j)
-    result += get(g, 4, j)
-    result += '\n'
-  }
-  return result
-}
-
 let hash5: Uint32Array | null = null
 
 function Game() {
-  const cells = new Grid(400, 400)
+  const cells = new Grid(200, 200)
   const [grid, setGrid] = useState(cells)
   const [loaded, setLoaded] = useState<boolean>(false)
   const [fps, setFps] = useState(0)
   const [, setFramesCount] = useState(0)
+  const [lexiconFilter, setLexiconFilter] = useState('')
+  const [lexicon, setLexicon] = useState<
+    Array<{
+      name: string
+      desc: string
+      grid: string[]
+    }>
+  >([])
 
   useEffect(() => {
     const glider = Grid.fromRle(gliderRle)
-    if (glider) setGrid(g => g.copyFrom(glider, 200, 200))
+    if (glider) setGrid(g => g.copyFrom(glider, 100, 100))
   }, [])
 
   useEffect(() => {
-    fetch('hash5.buff')
-      .then(res => res.arrayBuffer())
-      .then(buff => {
-        hash5 = new Uint32Array(buff)
-        setLoaded(true)
-      })
+    Promise.all([
+      fetch('hash5.buff')
+        .then(res => res.arrayBuffer())
+        .then(buff => (hash5 = new Uint32Array(buff))),
+
+      fetch('lexicon.json')
+        .then(res => res.json())
+        .then(lex => setLexicon(lex)),
+    ]).then(() => setLoaded(true))
   }, [])
 
   useEffect(() => {
@@ -59,7 +50,7 @@ function Game() {
     setInterval(() => {
       setGrid(g => g.tick2())
       setFramesCount(c => c + 1)
-    }, 1000 / 60)
+    }, 1000 / 30)
   }, [loaded])
 
   useEffect(() => {
@@ -72,11 +63,28 @@ function Game() {
   }, [])
 
   return (
-    <>
-      FPS={fps}
-      <br />
-      <GridViewer grid={grid} />
-    </>
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <div>FPS={fps}</div>
+      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', height: '600px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', width: '25em' }}>
+          <input
+            className="form-control"
+            style={{ margin: '5px', width: '24em' }}
+            placeholder="Filter here"
+            value={lexiconFilter}
+            onChange={e => setLexiconFilter(e.target.value)}
+          />
+          <ul className="list-group" style={{ height: '30em', overflow: 'scroll' }}>
+            {lexicon
+              .filter(lex => lex.name.toLowerCase().includes(lexiconFilter.toLowerCase()))
+              .map(lex => (
+                <li className="list-group-item">{lex.name}</li>
+              ))}
+          </ul>
+        </div>
+        <GridViewer grid={grid} />
+      </div>
+    </div>
   )
 }
 
