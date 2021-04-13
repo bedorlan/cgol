@@ -63,17 +63,7 @@ function Game() {
       style={{ display: 'flex' }}
       onMouseMove={e => {
         if (!currentPattern) return
-        const width = currentPattern.grid[0].length * cellSize
-        const length = currentPattern.grid.length * cellSize
-        const x = e.nativeEvent.pageX
-        const y = e.nativeEvent.pageY
-        const context = fullCanvasRef.current!.getContext('2d')!
-        context.clearRect(0, 0, window.innerWidth, window.innerHeight)
-        context.fillStyle = '#00ff00'
-        context.fillRect(x, y, width, 1)
-        context.fillRect(x, y, 1, length)
-        context.fillRect(x + width, y, 1, length)
-        context.fillRect(x, y + length, width, 1)
+        drawPreview(e.nativeEvent.pageX, e.nativeEvent.pageY)
       }}
       onMouseUp={e => {
         fullCanvasRef.current!.getContext('2d')!.clearRect(0, 0, window.innerWidth, window.innerHeight)
@@ -91,23 +81,24 @@ function Game() {
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', height: '600px' }}>
           <div style={{ display: 'flex', flexDirection: 'column', width: '25em' }}>
             <input
-              className="form-control"
               style={{ margin: '5px', width: '24em' }}
               placeholder="Filter here"
               value={lexiconFilter}
               onChange={e => setLexiconFilter(e.target.value)}
             />
-            <div className="list-group" style={{ height: '30em', overflow: 'scroll' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', height: '35em', overflow: 'scroll' }}>
               {lexicon
                 .filter(lex => lex.name.toLowerCase().includes(lexiconFilter.toLowerCase()))
                 .map(lex => (
                   <button
                     type="button"
-                    className="list-group-item list-group-item-action"
-                    style={{ cursor: 'move' }}
+                    style={{ cursor: 'move', textAlign: 'left' }}
                     key={lex.name}
                     title={lex.desc}
-                    onMouseDown={e => setCurrentPattern(lex)}
+                    onMouseDown={e => {
+                      setCurrentPattern(lex)
+                      drawPreview(e.nativeEvent.pageX, e.nativeEvent.pageY)
+                    }}
                   >
                     {lex.name}
                   </button>
@@ -129,6 +120,23 @@ function Game() {
       </div>
     </div>
   )
+
+  function drawPreview(x: number, y: number) {
+    setCurrentPattern(currentPattern => {
+      if (!currentPattern) return currentPattern
+      const width = currentPattern.grid[0].length * cellSize
+      const length = currentPattern.grid.length * cellSize
+      const lineWidth = 2
+      const context = fullCanvasRef.current!.getContext('2d')!
+      context.clearRect(0, 0, window.innerWidth, window.innerHeight)
+      context.fillStyle = '#00ff00'
+      context.fillRect(x, y, width, lineWidth)
+      context.fillRect(x, y, lineWidth, length)
+      context.fillRect(x + width, y, lineWidth, length + lineWidth)
+      context.fillRect(x, y + length, width, lineWidth)
+      return currentPattern
+    })
+  }
 }
 
 interface IGridViewerProps {
