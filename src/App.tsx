@@ -15,7 +15,7 @@ interface ILexicon {
 
 function Game() {
   const cellSize = 3
-  const cells = new Grid(200, 200)
+  const cells = new Grid(300, 200)
   const [grid, setGrid] = useState(cells)
   const [loaded, setLoaded] = useState<boolean>(false)
   const [fps, setFps] = useState(0)
@@ -47,7 +47,7 @@ function Game() {
     setInterval(() => {
       setGrid(g => g.tick2())
       setFramesCount(c => c + 1)
-    }, 1000 / 30)
+    }, 1000 / 12)
   }, [loaded])
 
   useEffect(() => {
@@ -159,6 +159,8 @@ function GridViewer(props: IGridViewerProps) {
       const context = refCanvas.current!.getContext('2d')!
       context.fillStyle = '#0a1243'
       context.fillRect(0, 0, context.canvas.width, context.canvas.height)
+      context.fillStyle = '#101d70'
+      context.fillRect(Math.floor(context.canvas.width / 2), 0, 1, context.canvas.height)
       context.fillStyle = '#ffffff'
       drawGridOnCanvas(context, 0, 0, grid, cellSize)
     },
