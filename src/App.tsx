@@ -124,16 +124,10 @@ function Game() {
   function drawPreview(x: number, y: number) {
     setCurrentPattern(currentPattern => {
       if (!currentPattern) return currentPattern
-      const width = currentPattern.grid[0].length * cellSize
-      const length = currentPattern.grid.length * cellSize
-      const lineWidth = 2
       const context = fullCanvasRef.current!.getContext('2d')!
       context.clearRect(0, 0, window.innerWidth, window.innerHeight)
       context.fillStyle = '#00ff00'
-      context.fillRect(x, y, width, lineWidth)
-      context.fillRect(x, y, lineWidth, length)
-      context.fillRect(x + width, y, lineWidth, length + lineWidth)
-      context.fillRect(x, y + length, width, lineWidth)
+      drawGridOnCanvas(context, x, y, Grid.fromLexicon(currentPattern.grid), cellSize)
       return currentPattern
     })
   }
@@ -154,13 +148,8 @@ function GridViewer(props: IGridViewerProps) {
       const context = refCanvas.current!.getContext('2d')!
       context.fillStyle = '#0a1243'
       context.fillRect(0, 0, context.canvas.width, context.canvas.height)
-
       context.fillStyle = '#ffffff'
-      for (let j = 0; j < grid.length; ++j) {
-        for (let i = 0; i < grid.width; ++i) {
-          if (grid.get(i, j) > 0) context.fillRect(i * cellSize, j * cellSize, cellSize, cellSize)
-        }
-      }
+      drawGridOnCanvas(context, 0, 0, grid, cellSize)
     },
     [grid],
   )
@@ -304,6 +293,14 @@ class Grid {
       }
     }
     return grid
+  }
+}
+
+function drawGridOnCanvas(context: CanvasRenderingContext2D, x: number, y: number, grid: Grid, cellSize: number) {
+  for (let j = 0; j < grid.length; ++j) {
+    for (let i = 0; i < grid.width; ++i) {
+      if (grid.get(i, j) > 0) context.fillRect(x + i * cellSize, y + j * cellSize, cellSize, cellSize)
+    }
   }
 }
 
