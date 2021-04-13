@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "Node",
+    "lib": [
+      "esnext"
+    ],
+    "downlevelIteration": true
+  }
+}
