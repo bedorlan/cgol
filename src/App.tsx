@@ -47,7 +47,7 @@ function Game() {
     setInterval(() => {
       setGrid(g => g.tick2())
       setFramesCount(c => c + 1)
-    }, 1000 / 12)
+    }, 1000 / 16)
   }, [loaded])
 
   useEffect(() => {
@@ -160,7 +160,8 @@ function GridViewer(props: IGridViewerProps) {
       context.fillStyle = '#0a1243'
       context.fillRect(0, 0, context.canvas.width, context.canvas.height)
       context.fillStyle = '#101d70'
-      context.fillRect(Math.floor(context.canvas.width / 2), 0, 1, context.canvas.height)
+      context.fillRect(Math.floor(context.canvas.width * (1 / 3)), 0, 1, context.canvas.height)
+      context.fillRect(Math.floor(context.canvas.width * (2 / 3)), 0, 1, context.canvas.height)
       context.fillStyle = '#ffffff'
       drawGridOnCanvas(context, 0, 0, grid, cellSize)
     },
