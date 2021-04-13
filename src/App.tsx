@@ -31,7 +31,11 @@ function Game() {
 
       fetch('lexicon.json')
         .then(res => res.json())
-        .then((lex: ILexicon[]) => setLexicon(lex.filter(lex => lex.grid.length))),
+        .then((lex: ILexicon[]) => {
+          lex = lex.filter(l => l.grid.length)
+          lex.forEach(l => (l.desc = l.desc.replace(/\s{2,}/g, ' ').trim()))
+          setLexicon(lex)
+        }),
     ]).then(() => setLoaded(true))
   }, [])
 
@@ -73,6 +77,7 @@ function Game() {
                   className="list-group-item list-group-item-action"
                   style={{ cursor: 'move' }}
                   key={lex.name}
+                  title={lex.desc}
                   onMouseDown={e => setCurrentPattern(lex)}
                 >
                   {lex.name}
