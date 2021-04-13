@@ -14,6 +14,7 @@ interface ILexicon {
 }
 
 function Game() {
+  const cellSize = 3
   const cells = new Grid(200, 200)
   const [grid, setGrid] = useState(cells)
   const [loaded, setLoaded] = useState<boolean>(false)
@@ -22,6 +23,7 @@ function Game() {
   const [lexiconFilter, setLexiconFilter] = useState('')
   const [lexicon, setLexicon] = useState<Array<ILexicon>>([])
   const [currentPattern, setCurrentPattern] = useState<ILexicon | null>(null)
+  const fullCanvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
     Promise.all([
@@ -57,43 +59,73 @@ function Game() {
   }, [])
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }} onMouseUp={e => setCurrentPattern(null)}>
-      <div>FPS={fps}</div>
-      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', height: '600px' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', width: '25em' }}>
-          <input
-            className="form-control"
-            style={{ margin: '5px', width: '24em' }}
-            placeholder="Filter here"
-            value={lexiconFilter}
-            onChange={e => setLexiconFilter(e.target.value)}
-          />
-          <div className="list-group" style={{ height: '30em', overflow: 'scroll' }}>
-            {lexicon
-              .filter(lex => lex.name.toLowerCase().startsWith(lexiconFilter.toLowerCase()))
-              .map(lex => (
-                <button
-                  type="button"
-                  className="list-group-item list-group-item-action"
-                  style={{ cursor: 'move' }}
-                  key={lex.name}
-                  title={lex.desc}
-                  onMouseDown={e => setCurrentPattern(lex)}
-                >
-                  {lex.name}
-                </button>
-              ))}
+    <div
+      style={{ display: 'flex' }}
+      onMouseMove={e => {
+        if (!currentPattern) return
+        const width = currentPattern.grid[0].length * cellSize
+        const length = currentPattern.grid.length * cellSize
+        const x = e.nativeEvent.pageX
+        const y = e.nativeEvent.pageY
+        const context = fullCanvasRef.current!.getContext('2d')!
+        context.clearRect(0, 0, window.innerWidth, window.innerHeight)
+        context.fillStyle = '#00ff00'
+        context.fillRect(x, y, width, 1)
+        context.fillRect(x, y, 1, length)
+        context.fillRect(x + width, y, 1, length)
+        context.fillRect(x, y + length, width, 1)
+      }}
+      onMouseUp={e => {
+        fullCanvasRef.current!.getContext('2d')!.clearRect(0, 0, window.innerWidth, window.innerHeight)
+        setCurrentPattern(null)
+      }}
+    >
+      <canvas
+        ref={fullCanvasRef}
+        width={window.innerWidth}
+        height={window.innerHeight}
+        style={{ position: 'fixed', pointerEvents: 'none' }}
+      />
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div>FPS={fps}</div>
+        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', height: '600px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', width: '25em' }}>
+            <input
+              className="form-control"
+              style={{ margin: '5px', width: '24em' }}
+              placeholder="Filter here"
+              value={lexiconFilter}
+              onChange={e => setLexiconFilter(e.target.value)}
+            />
+            <div className="list-group" style={{ height: '30em', overflow: 'scroll' }}>
+              {lexicon
+                .filter(lex => lex.name.toLowerCase().includes(lexiconFilter.toLowerCase()))
+                .map(lex => (
+                  <button
+                    type="button"
+                    className="list-group-item list-group-item-action"
+                    style={{ cursor: 'move' }}
+                    key={lex.name}
+                    title={lex.desc}
+                    onMouseDown={e => setCurrentPattern(lex)}
+                  >
+                    {lex.name}
+                  </button>
+                ))}
+            </div>
           </div>
+          <GridViewer
+            cellSize={cellSize}
+            grid={grid}
+            onMouseUp={c => {
+              if (!currentPattern) return
+              const newGrid = Grid.fromLexicon(currentPattern.grid)
+              setGrid(g => g.copyFrom(newGrid, c.x, c.y))
+              fullCanvasRef.current!.getContext('2d')!.clearRect(0, 0, window.innerWidth, window.innerHeight)
+              setCurrentPattern(null)
+            }}
+          />
         </div>
-        <GridViewer
-          grid={grid}
-          onMouseUp={c => {
-            if (!currentPattern) return
-            const newGrid = Grid.fromLexicon(currentPattern.grid)
-            setGrid(g => g.copyFrom(newGrid, c.x, c.y))
-            setCurrentPattern(null)
-          }}
-        />
       </div>
     </div>
   )
@@ -101,10 +133,11 @@ function Game() {
 
 interface IGridViewerProps {
   grid: Grid
+  cellSize: number
   onMouseUp?: (coor: { x: number; y: number }) => void
 }
 function GridViewer(props: IGridViewerProps) {
-  const cellSize = 3
+  const cellSize = props.cellSize
   const grid = props.grid
   const refCanvas = useRef<HTMLCanvasElement>(null)
 
