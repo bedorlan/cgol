@@ -28,9 +28,9 @@ function Game() {
 
   useEffect(() => {
     Promise.all([
-      fetch('hash5.buff')
-        .then(res => res.arrayBuffer())
-        .then(buff => (hash5 = new Uint32Array(buff))),
+      // fetch('hash5.buff')
+      //   .then(res => res.arrayBuffer())
+      //   .then(buff => (hash5 = new Uint32Array(buff))),
 
       fetch('lexicon.json')
         .then(res => res.json())
@@ -45,7 +45,7 @@ function Game() {
   useEffect(() => {
     if (!loaded) return
     setInterval(() => {
-      setGrid(g => g.tick2())
+      setGrid(g => g.tick())
       setFramesCount(c => c + 1)
     }, 1000 / 16)
   }, [loaded])
@@ -107,7 +107,7 @@ function Game() {
                     key={lex.name}
                     title={lex.desc}
                     onMouseDown={e => {
-                      setCurrentPattern(Grid.fromLexicon(lex.grid))
+                      setCurrentPattern(Grid.fromLexicon(lex.grid, 1))
                       drawPreview(e.nativeEvent.pageX, e.nativeEvent.pageY)
                     }}
                   >
@@ -162,7 +162,6 @@ function GridViewer(props: IGridViewerProps) {
       context.fillStyle = '#101d70'
       context.fillRect(Math.floor(context.canvas.width * (1 / 3)), 0, 1, context.canvas.height)
       context.fillRect(Math.floor(context.canvas.width * (2 / 3)), 0, 1, context.canvas.height)
-      context.fillStyle = '#ffffff'
       drawGridOnCanvas(context, 0, 0, grid, cellSize)
     },
     [grid],
@@ -222,9 +221,20 @@ class Grid {
         const a6 = this.getSafe(i - 1, j + 1)
         const a7 = this.getSafe(i + 0, j + 1)
         const a8 = this.getSafe(i + 1, j + 1)
-        const neighbors = a0 + a1 + a2 + a3 + a5 + a6 + a7 + a8
-        if (a4 === 1 && (neighbors < 2 || neighbors > 3)) copy.set(i, j, 0)
-        else if (a4 === 0 && neighbors === 3) copy.set(i, j, 1)
+        const neighbors =
+          Math.sign(a0) +
+          Math.sign(a1) +
+          Math.sign(a2) +
+          Math.sign(a3) +
+          Math.sign(a5) +
+          Math.sign(a6) +
+          Math.sign(a7) +
+          Math.sign(a8)
+        if (a4 > 0 && (neighbors < 2 || neighbors > 3)) copy.set(i, j, 0)
+        else if (a4 === 0 && neighbors === 3) {
+          const color = a0 + a1 + a2 + a3 + a5 + a6 + a7 + a8 <= 4 ? 1 : 2
+          copy.set(i, j, color)
+        }
       }
     }
     return copy
@@ -307,13 +317,13 @@ class Grid {
     return grid
   }
 
-  static fromLexicon(gridText: ILexicon['grid']) {
+  static fromLexicon(gridText: ILexicon['grid'], player: number) {
     const width = gridText[0].length
     const length = gridText.length
     const grid = new Grid(width, length)
     for (let j = 0; j < length; ++j) {
       for (let i = 0; i < width; ++i) {
-        grid.cells[pos(width, i, j)] = gridText[j].charAt(i) === '1' ? 1 : 0
+        grid.cells[pos(width, i, j)] = gridText[j].charAt(i) === '1' ? player : 0
       }
     }
     return grid
@@ -321,9 +331,14 @@ class Grid {
 }
 
 function drawGridOnCanvas(context: CanvasRenderingContext2D, x: number, y: number, grid: Grid, cellSize: number) {
+  const colors = ['#000000', '#8080ff', '#ff8080', '#00ff00']
   for (let j = 0; j < grid.length; ++j) {
     for (let i = 0; i < grid.width; ++i) {
-      if (grid.get(i, j) > 0) context.fillRect(x + i * cellSize, y + j * cellSize, cellSize, cellSize)
+      const cell = grid.get(i, j)
+      if (cell > 0) {
+        context.fillStyle = colors[cell]
+        context.fillRect(x + i * cellSize, y + j * cellSize, cellSize, cellSize)
+      }
     }
   }
 }
