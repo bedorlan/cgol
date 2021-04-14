@@ -15,8 +15,7 @@ interface ILexicon {
 
 function Game() {
   const cellSize = 3
-  const cells = new Grid(300, 200)
-  const [grid, setGrid] = useState(cells)
+  const [grid, setGrid] = useState(() => new Grid(300, 200))
   const [loaded, setLoaded] = useState<boolean>(false)
   const [fps, setFps] = useState(0)
   const [, setFramesCount] = useState(0)
@@ -122,7 +121,15 @@ function Game() {
             onMouseUp={c => {
               if (!currentPattern) return
               const newGrid = currentPattern
-              setGrid(g => g.copyFrom(newGrid, c.x, c.y))
+              setGrid(g => {
+                return g
+                  .copyFrom(newGrid, c.x, c.y)
+                  .copyFrom(
+                    newGrid.rotate90().rotate90().changePlayer(2),
+                    grid.width - c.x - newGrid.width,
+                    grid.length - c.y - newGrid.length,
+                  )
+              })
               fullCanvasRef.current!.getContext('2d')!.clearRect(0, 0, window.innerWidth, window.innerHeight)
               setCurrentPattern(null)
             }}
@@ -282,6 +289,16 @@ class Grid {
     for (let j = 0; j < this.length; ++j) {
       for (let i = 0; i < this.width; ++i) {
         copy.set(this.length - 1 - j, i, this.get(i, j))
+      }
+    }
+    return copy
+  }
+
+  changePlayer(player: number) {
+    const copy = new Grid(this.width, this.length)
+    for (let j = 0; j < this.length; ++j) {
+      for (let i = 0; i < this.width; ++i) {
+        copy.set(i, j, this.get(i, j) > 0 ? player : 0)
       }
     }
     return copy
