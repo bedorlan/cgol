@@ -331,7 +331,7 @@ class Grid {
 }
 
 function drawGridOnCanvas(context: CanvasRenderingContext2D, x: number, y: number, grid: Grid, cellSize: number) {
-  const colors = ['#000000', '#8080ff', '#ff8080', '#00ff00']
+  const colors = ['#000000', '#b3b3ff', '#ffb3b3', '#00ff00']
   for (let j = 0; j < grid.length; ++j) {
     for (let i = 0; i < grid.width; ++i) {
       const cell = grid.get(i, j)
