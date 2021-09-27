@@ -87,7 +87,7 @@ function Game() {
         style={{ position: 'fixed', pointerEvents: 'none' }}
       />
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <div>FPS={fps}</div>
+        <div>Drag & drop into the blue canvas to view pattern. Press spacebar while dragging to rotate. FPS={fps}</div>
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', height: '600px' }}>
           <div style={{ display: 'flex', flexDirection: 'column', width: '25em' }}>
             <input
@@ -122,13 +122,12 @@ function Game() {
               if (!currentPattern) return
               const newGrid = currentPattern
               setGrid(g => {
-                return g
-                  .copyFrom(newGrid, c.x, c.y)
-                  .copyFrom(
-                    newGrid.rotate90().rotate90().changePlayer(2),
-                    grid.width - c.x - newGrid.width,
-                    grid.length - c.y - newGrid.length,
-                  )
+                return g.copyFrom(newGrid, c.x, c.y)
+                // .copyFrom(
+                //   newGrid.rotate90().rotate90().changePlayer(2),
+                //   grid.width - c.x - newGrid.width,
+                //   grid.length - c.y - newGrid.length,
+                // )
               })
               fullCanvasRef.current!.getContext('2d')!.clearRect(0, 0, window.innerWidth, window.innerHeight)
               setCurrentPattern(null)
