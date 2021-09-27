@@ -87,7 +87,11 @@ function Game() {
         style={{ position: 'fixed', pointerEvents: 'none' }}
       />
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <div>Drag & drop into the blue canvas to view pattern. Press spacebar while dragging to rotate. FPS={fps}</div>
+        <div>
+          Drag & drop into the blue canvas to view pattern. Press spacebar while dragging to rotate. <br />
+          <a href="https://github.com/bedorlan/cgol">Source code</a> <br />
+          FPS={fps}
+        </div>
         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', height: '600px' }}>
           <div style={{ display: 'flex', flexDirection: 'column', width: '25em' }}>
             <input
